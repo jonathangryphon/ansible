@@ -1,0 +1,15 @@
+username: felix
+docker_dir: /opt/docker/data
+docker_compose_dir: /opt/docker/compose
+services:
+  - nginxproxymanager
+networks:
+  - name: lan
+    cidr: 192.168.2.0/24
+    base: 192.168.2
+    interface: ens18
+    tailscale: yes # whether the subnet should be exposed to other Tailscale nodes
+  - name: iot
+    cidr: 192.168.32.0/24
+    base: 192.168.32
+    tailscale: yes

@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+{% if "nginxproxymanager" in services %}
+  nginxproxymanager:
+    container_name: nginxproxymanager
+    image: jc21/nginx-proxy-manager:latest
+{% if not app_cidr == "" %}
+    networks:
+      - proxiable
+{% else %}
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+{% endif %}
+    restart: always
+    volumes:
+      - "{{ docker_dir }}/nginxproxymanager/data:/data"
+      - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
+{% endif %}

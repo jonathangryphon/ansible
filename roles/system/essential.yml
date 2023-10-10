@@ -1,0 +1,27 @@
+- name: Get Updates
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Run Updates
+  apt:
+    upgrade: dist
+
+- name: Disable SSH password auth
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+  register: sshd_config
+
+- name: Enable passwordless sudo for "{{ username }}"
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%wheel"
+    line: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: Restart SSH daemon when config changed
+  service: 
+    name: sshd
+    state: restarted
+  when: sshd_config.changed
